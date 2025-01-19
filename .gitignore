@@ -1,0 +1,3 @@
+kiosk/node_modules/
+server/__pycache__
+server/config.py
