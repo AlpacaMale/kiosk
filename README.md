@@ -79,19 +79,19 @@ MySQL
 1. **Clone repository**
 
 ```
-git clone jjfjfjfj
+git clone https://github.com/AlpacaMale/kiosk
 ```
 
 2. **Install dependency**
 
 ```
-pip install -r requirements.txt
+pip install -r server/requirements.txt
 ```
 
 3. **Run flask server**
 
 ```
-python app.py
+python server/app.py
 ```
 
 ## 트러블슈팅
