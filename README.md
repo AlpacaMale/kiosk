@@ -45,6 +45,11 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 - [ ] POST /order
 - [ ] PUT /order
 - [ ] type, ice, size에 대한 옵션 테이블을 생성하고, 기존 메뉴 테이블과 관계 설정하기
+- [ ] GET /image/:id
+- [ ] 서버사이드 예외처리
+- [ ] html, css 주석
+- [ ] Javascript 구현
+- [ ] Electron UI, UX 구현
 
 ## 코드 컨벤션
 
@@ -59,7 +64,12 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 
 ```
 ├── assets
-├── kiosk
+├── client
+│   ├── styles / Style sheets
+│   │   ├── components  / Components style sheets
+│   │   └── screens / Screen style sheets
+│   ├── index.html / Web entry
+│   └── main.js / Electron entry
 ├── server
 │   ├── app.py / Flask app
 │   ├── models.py / ORM model
@@ -73,8 +83,12 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 
 Flask
 MySQL
+HTML, CSS
+Electron
 
 ## 실행 방법
+
+### 공통
 
 1. **Clone repository**
 
@@ -82,16 +96,38 @@ MySQL
 git clone https://github.com/AlpacaMale/kiosk
 ```
 
-2. **Install dependency**
+### Flask server
+
+1. **Install dependency**
 
 ```
 pip install -r server/requirements.txt
 ```
 
-3. **Run flask server**
+2. **Run flask server**
 
 ```
 python server/app.py
+```
+
+### Electron Client
+
+1. **Move directory**
+
+```
+cd client
+```
+
+2. **Install dependency**
+
+```
+npm i
+```
+
+3. **Run electron**
+
+```
+npm run start
 ```
 
 ## 트러블슈팅
