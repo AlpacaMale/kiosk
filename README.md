@@ -81,10 +81,10 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 
 ## 기술 스택
 
-Flask
-MySQL
-HTML, CSS
-Electron
+- Flask
+- MySQL
+- HTML, CSS
+- Electron
 
 ## 실행 방법
 
