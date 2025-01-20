@@ -1,0 +1,23 @@
+.item-screen {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(auto-fill, var(--item-height));
+  background-color: lightgray;
+  gap: 5px;
+  padding: 5px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    to top,
+    rgba(255, 255, 255, 0.8),
+    rgba(0, 0, 0, 0)
+  );
+  border-radius: 10px;
+  min-height: var(--item-height);
+}

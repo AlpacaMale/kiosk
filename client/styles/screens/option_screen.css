@@ -1,0 +1,48 @@
+.option-wrapper {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 3fr 35fr 5fr;
+}
+
+.line1 {
+  grid-row: 1/2;
+}
+.line2 {
+  grid-row: 2/3;
+}
+.line3 {
+  grid-row: 3/4;
+}
+.line4 {
+  grid-row: 4/5;
+}
+
+.commit {
+  display: flex;
+  flex-direction: row;
+  /* width: 70%; */
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main-color);
+}
+.commit > div {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.commit > div > span {
+  padding: 15px 20%;
+  /* background-color: white; */
+  border-radius: 3px;
+  font-weight: bold;
+}
+
+.commit-ok > span {
+  background-color: white;
+  /* color: black; */
+}
+.commit-cancle > span {
+  background-color: black;
+  color: white;
+}

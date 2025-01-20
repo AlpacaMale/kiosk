@@ -1,0 +1,8 @@
+:root {
+  --main-color: rgb(244, 77, 77);
+  --gold: rgb(211, 191, 124);
+  --default-padding: 15px;
+  --tab-button-padding: 10px;
+  --tab-button-column-padding: 5px;
+  --item-height: 150px;
+}
