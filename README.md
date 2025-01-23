@@ -39,6 +39,11 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 - **PUT** `/order/:id`
   → 특정 주문을 수정합니다.
 
+### Image 관련
+
+- **GET** `/img/:id`
+  → 이미지를 가져옵니다.
+
 ## DB 스키마
 
 ![DB diagram](./assets/diagram.png)
@@ -46,9 +51,9 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 ## To-Do List
 
 - [x] **Menu tab bar**: 메뉴화면 탭 바 구현
+- [x] **GET /image/:id**: 이미지 처리 로직 구현
 - [ ] **Electron UI, UX 구현**: 클라이언트 로직 구현
 - [ ] **이미지 처리**: 사이즈 조절, 누끼 따기
-- [ ] **GET /image/:id**: 이미지 처리 로직 구현
 - [ ] **서버사이드 예외처리**: 오류 처리 로직 구현
 - [ ] **GET /order**: 주문 내역을 가져오는 API 구현
 - [ ] **POST /order**: 새로운 주문을 생성하는 API 구현
@@ -79,6 +84,7 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 │   ├── render.js / Electron renderer processer entry
 │   └── main.js / Electron main processer entry
 ├── 📁 server
+│   ├── 📁 images / Contain jpg file
 │   ├── app.py / Flask app
 │   ├── models.py / ORM model
 │   ├── request.py / HTTP request test
