@@ -4,6 +4,7 @@ WIDTH = 600;
 HEIGHT = 800;
 
 let mainWindow;
+let slideWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -17,10 +18,21 @@ function createWindow() {
   });
 
   mainWindow.loadFile("./index.html");
-
+  mainWindow.webContents.openDevTools();
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
+}
+
+function createSlideWindow() {
+  slideWindow = new BrowserWindow({
+    width: WIDTH,
+    height: HEIGHT,
+    frame: false,
+    // transparent: true,
+  });
+
+  slideWindow.loadURL("./option.html");
 }
 
 app.on("ready", createWindow);

@@ -1,12 +1,13 @@
 .item-screen {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(auto-fill, var(--item-height));
+  grid-auto-rows: var(--item-height);
   background-color: lightgray;
   gap: 5px;
   padding: 5px;
   overflow-y: auto;
   scrollbar-width: none;
+  display: none;
 }
 
 .item {
@@ -23,6 +24,10 @@
     rgba(0, 0, 0, 0) 0%,
     rgba(0, 0, 0, 0.5) 100%
   );
+}
+
+.active {
+  display: grid;
 }
 
 .item > span {
