@@ -45,6 +45,7 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 
 ## To-Do List
 
+- [x] **Menu tab bar**: 메뉴화면 탭 바 구현
 - [ ] **Electron UI, UX 구현**: 클라이언트 로직 구현
 - [ ] **이미지 처리**: 사이즈 조절, 누끼 따기
 - [ ] **GET /image/:id**: 이미지 처리 로직 구현
@@ -64,6 +65,7 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 | CSS Class                    | **kebab-case**       |
 | Constant                     | **UPPER_SNAKE_CASE** |
 | Indent                       | **Tab**              |
+| JS variable                  | **camelCase**        |
 
 ## 패키지 구조
 
