@@ -1,7 +1,16 @@
-from flask import Flask, Response, request  # , jsonify 한글 인코딩 에러로 사용하지 않음
+from flask import (
+    Flask,
+    Response,
+    send_file,
+    request,
+)  # , jsonify 한글 인코딩 에러로 사용하지 않음
 from config import Config
 from models import Menu, Status, Orders, OrderItems, db
+import requests
 import json
+import os
+
+HOST_IP = "http://127.0.0.1:5000"
 
 # 어플리케이션 초기화
 app = Flask(__name__)
@@ -29,10 +38,33 @@ def add_menu():
         kind=menu_json.get("kind"),
         base_price=menu_json.get("base_price"),
         type=menu_json.get("type"),
-        img_path=menu_json.get("img_path"),
+        # img_path=menu_json.get("img_path"),
     )
+
+    # DB에서 메뉴의 ID 알아내기
     db.session.add(menu_item)
     db.session.commit()
+
+    menu_item = Menu.query.filter_by(
+        name=menu_json.get("name"),
+        kind=menu_json.get("kind"),
+        type=menu_json.get("type"),
+    ).first()
+
+    # 알아낸 ID를 통해서 img url 설정
+    img_path = f"{HOST_IP}/img/{menu_item.id}"
+    menu_item.img_path = img_path
+    db.session.commit()
+
+    # 설정한 img url로 이미지 파일 다운로드
+    # 이미지 폴더 생성
+    os.makedirs("server/images", exist_ok=True)
+    # 이미지 다운로드 후에 로컬 images에 저장
+    response = requests.get(menu_json.get("img_path"), stream=True)
+    if response.status_code == 200:
+        with open(f"server/images/{menu_item.id}.jpg", "wb") as f:
+            for chunk in response.iter_content(1024):
+                f.write(chunk)
     # return jsonify({"message": "Menu added successfully!"}), 200
     return Response(json.dumps({"message": "Menu added successfully!"}))
 
@@ -63,6 +95,15 @@ def delete_menu(menu_id):
     db.session.commit()
     # return jsonify({"message": "Menu deleted successfully!"}), 200
     return Response(json.dumps({"message": "Menu deleted successfully!"}))
+
+
+@app.route("/img/<int:menu_id>/", methods=["GET"])
+def get_img(menu_id):
+    # 쿼리 파라미터 확인
+    # data = request.args
+    # print(json.dumps(data))
+    img_path = f"images/{menu_id}.jpg"
+    return send_file(img_path, mimetype="image/jpeg")
 
 
 @app.route("/order", methods=["GET"])

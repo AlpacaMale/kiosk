@@ -37,7 +37,7 @@ class Menu(db.Model):
     kind = db.Column(db.String(50), nullable=False)
     base_price = db.Column(db.Integer, nullable=False)
     type = db.Column(db.Enum(Type), nullable=True)
-    img_path = db.Column(db.String(255), nullable=False)
+    img_path = db.Column(db.String(255), nullable=True)
 
     # 모델 클래스를 dict 형태로 변환하는 메소드
     def to_dict(self):
