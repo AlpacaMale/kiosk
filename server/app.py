@@ -16,6 +16,7 @@ from function import login_required
 import requests
 import json
 import os
+import csv
 
 HOST_IP = "http://127.0.0.1:5000"
 
@@ -87,11 +88,12 @@ def add_menu():
     # 이미지 폴더 생성
     os.makedirs("server/images/menus", exist_ok=True)
     # 이미지 다운로드 후에 로컬 images에 저장
-    response = requests.get(menu_json.get("img_path"), stream=True)
-    if response.status_code == 200:
-        with open(f"server/images/menus/{menu_item.id}.jpg", "wb") as f:
-            for chunk in response.iter_content(1024):
-                f.write(chunk)
+    if menu_json.get("img_path"):
+        response = requests.get(menu_json.get("img_path"), stream=True)
+        if response.status_code == 200:
+            with open(f"server/images/menus/{menu_item.id}.jpg", "wb") as f:
+                for chunk in response.iter_content(1024):
+                    f.write(chunk)
     # return jsonify({"message": "Menu added successfully!"}), 200
     return Response(json.dumps({"message": "Menu added successfully!"}), status=200)
 
@@ -109,7 +111,8 @@ def update_menu(menu_id):
     menu_item.kind = menu_json.get("kind")
     menu_item.base_price = menu_json.get("base_price")
     menu_item.type = menu_json.get("type")
-    menu_item.img_path = menu_json.get("img_path")
+    if menu_json.get("img_path"):
+        menu_item.img_path = menu_json.get("img_path")
     db.session.add(menu_item)
     db.session.commit()
     # return jsonify({"message": "Menu updated successfully!"}), 200
@@ -241,7 +244,6 @@ def login():
 # 로그아웃 api
 @app.route("/api/logout", methods=["POST"])
 def logout():
-    session.pop("email", None)
     return Response(json.dumps({"message": "Logout success!"}), status=200)
 
 
@@ -283,13 +285,91 @@ def admin_login():
         return render_template("login.html")
 
 
+# 관리자 로그아웃 페이지
+@app.route("/admin/logout", methods=["POST"])
+def admin_logout():
+    response = requests.post(f"{HOST_IP}/api/logout", headers=headers)
+    if response.status_code == 200:
+        session.pop("email", None)
+    return redirect("/admin")
+
+
 # 관리자 페이지
 @app.route("/admin", methods=["GET"])
 @login_required
 def admin():
-    # todo db
-    return render_template("index.html", user=session.get("email"))
+    response = requests.get(f"{HOST_IP}/menus", headers=headers)
+    datas = response.json()
+    return render_template("index.html", email=session.get("email"), datas=datas)
+
+
+# 관리자 페이지에서 개별 메뉴 조회
+@app.route("/admin/menus/<int:menu_id>", methods=["GET"])
+@login_required
+def admin_get_menu(menu_id):
+    response = requests.get(f"{HOST_IP}/menus/{menu_id}", headers=headers)
+    if response.status_code == 400:
+        flash(response.text)
+    data = response.json()
+    response = requests.get(f"{HOST_IP}/menus", headers=headers)
+    if response.status_code == 400:
+        flash(response.text)
+    datas = response.json()
+    return render_template(
+        "menu.html", data=data, email=session.get("email"), datas=datas
+    )
+
+
+# 관리자 페이지에서 전체 메뉴 다운로드
+@app.route("/admin/menus", methods=["GET"])
+@login_required
+def admin_export_menu():
+    response = requests.get(f"{HOST_IP}/menus", headers=headers)
+    if response.status_code == 400:
+        flash(response.text)
+    datas = response.json()
+    os.makedirs("server/data", exist_ok=True)
+    with open("server/data/menus.csv", "w", encoding="utf-8") as file:
+        fieldnames = ["id", "name", "name_en", "kind", "base_price", "type", "img_path"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(datas)
+    return send_file("data/menus.csv", mimetype="text/csv")
+
+
+# 관리자 페이지에서 메뉴 추가
+@app.route("/admin/menus", methods=["POST"])
+@login_required
+def admin_add_menu():
+    data = request.form.to_dict()
+    response = requests.post(f"{HOST_IP}/menus", headers=headers, data=json.dumps(data))
+    if response.status_code == 400:
+        flash(response.text)
+    return redirect("/admin")
+
+
+# 관리자 페이지에서 메뉴 수정
+@app.route("/admin/menus/<int:menu_id>", methods=["POST"])
+@login_required
+def admin_update_menu(menu_id):
+    data = request.form.to_dict()
+    response = requests.put(
+        f"{HOST_IP}/menus/{menu_id}", headers=headers, data=json.dumps(data)
+    )
+    if response.status_code == 400:
+        flash(response.text)
+    return redirect("/admin")
+
+
+# 관리자 페이지에서 메뉴 삭제
+@app.route("/admin/menus/<int:menu_id>/delete", methods=["GET"])
+@login_required
+def admin_delete_menu(menu_id):
+    response = requests.delete(f"{HOST_IP}/menus/{menu_id}", headers=headers)
+    if response.status_code == 400:
+        flash(response.text)
+    return redirect("/admin")
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
