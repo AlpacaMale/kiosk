@@ -22,6 +22,8 @@ db.init_app(app)
 @app.route("/menus", methods=["GET"])
 def get_menus():
     menus = Menu.query.all()
+    if not menus:
+        return Response(json.dumps({"message": "Menu doesn't exist!"}))
     menus = [menu.to_dict() for menu in menus]
     print(menus)
     return Response(json.dumps(menus, ensure_ascii=False))
@@ -30,7 +32,10 @@ def get_menus():
 # 특정 메뉴 목록 조회
 @app.route("/menus/<int:menu_id>", methods=["GET"])
 def get_menu(menu_id):
-    menu = Menu.query.filter_by(id=menu_id).first().to_dict()
+    menu = Menu.query.filter_by(id=menu_id).first()
+    if not menu:
+        return Response(json.dumps({"message": "Menu doesn't exist!"}))
+    menu = menu.to_dict()
     print(menu)
     return Response(json.dumps(menu, ensure_ascii=False))
 
@@ -83,6 +88,8 @@ def update_menu(menu_id):
     menu_json = request.json
     print(menu_json)
     menu_item = Menu.query.filter_by(id=menu_id).first()
+    if not menu_item:
+        return Response(json.dumps({"message": "Menu doesn't exist!"}))
     menu_item.name = menu_json.get("name")
     menu_item.name_en = menu_json.get("name_en")
     menu_item.kind = menu_json.get("kind")
@@ -99,6 +106,8 @@ def update_menu(menu_id):
 @app.route("/menus/<int:menu_id>", methods=["DELETE"])
 def delete_menu(menu_id):
     menu_item = Menu.query.filter_by(id=menu_id).first()
+    if not menu_item:
+        return Response(json.dumps({"message": "Menu doesn't exist!"}))
     db.session.delete(menu_item)
     db.session.commit()
     # return jsonify({"message": "Menu deleted successfully!"}), 200
