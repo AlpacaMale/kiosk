@@ -4,10 +4,13 @@ from flask import (
     send_file,
     request,
     session,
+    render_template,
+    redirect,
 )  # , jsonify 한글 인코딩 에러로 사용하지 않음
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 from models import Menu, Users, Status, Orders, OrderItems, db
+from function import login_required
 import requests
 import json
 import os
@@ -18,6 +21,11 @@ HOST_IP = "http://127.0.0.1:5000"
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
+
+
+@app.route("/")
+def _():
+    return redirect("/admin")
 
 
 # 메뉴 목록 조회
@@ -117,7 +125,7 @@ def delete_menu(menu_id):
 
 
 # 메뉴 이미지 전송
-@app.route("/images/menus/<int:menu_id>/", methods=["GET"])
+@app.route("/images/menus/<int:menu_id>", methods=["GET"])
 def get_menu_img(menu_id):
     # 쿼리 파라미터 확인
     # data = request.args
@@ -169,7 +177,7 @@ def get_user(user_id):
 # 새로운 유저 추가
 @app.route("/users", methods=["POST"])
 def add_user():
-    session.pop("user", None)
+    session.pop("email", None)
     user_json = request.json
     print(user_json)
 
@@ -217,15 +225,42 @@ def login():
     user = Users.query.filter_by(email=email).first()
     if not user or not check_password_hash(user.password, password):
         return Response(json.dumps({"message": "Login Failed!"}), status=400)
-    session["user"] = email
+    session["email"] = email
+    print(f"Logged in", session.get("email"))
     return Response(json.dumps({"message": "Login success!"}), status=200)
 
 
 # 로그아웃 api
 @app.route("/api/logout", methods=["POST"])
 def logout():
-    session.pop("user", None)
+    session.pop("email", None)
     return Response(json.dumps({"message": "Logout success!"}), status=200)
+
+
+# 관리자 회원가입 페이지
+@app.route("/admin/register", methods=["GET", "POST"])
+def admin_register():
+    if request.method == "POST":
+        pass
+    else:
+        return render_template("register.html")
+
+
+# 관리자 로그인 페이지
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if request.method == "POST":
+        pass
+    else:
+        return render_template("login.html")
+
+
+# 관리자 페이지
+@app.route("/admin", methods=["GET"])
+@login_required
+def admin():
+    # todo db
+    return render_template("index.html", user=session.get("email"))
 
 
 if __name__ == "__main__":
