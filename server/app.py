@@ -25,10 +25,10 @@ db.init_app(app)
 def get_menus():
     menus = Menu.query.all()
     if not menus:
-        return Response(json.dumps({"message": "Menu doesn't exist!"}))
+        return Response(json.dumps({"message": "Menu doesn't exist!"}), status=400)
     menus = [menu.to_dict() for menu in menus]
     print(menus)
-    return Response(json.dumps(menus, ensure_ascii=False))
+    return Response(json.dumps(menus, ensure_ascii=False), status=200)
 
 
 # 특정 메뉴 목록 조회
@@ -36,10 +36,10 @@ def get_menus():
 def get_menu(menu_id):
     menu = Menu.query.filter_by(id=menu_id).first()
     if not menu:
-        return Response(json.dumps({"message": "Menu doesn't exist!"}))
+        return Response(json.dumps({"message": "Menu doesn't exist!"}), status=400)
     menu = menu.to_dict()
     print(menu)
-    return Response(json.dumps(menu, ensure_ascii=False))
+    return Response(json.dumps(menu, ensure_ascii=False), status=200)
 
 
 # 새로운 메뉴 추가
@@ -81,7 +81,7 @@ def add_menu():
             for chunk in response.iter_content(1024):
                 f.write(chunk)
     # return jsonify({"message": "Menu added successfully!"}), 200
-    return Response(json.dumps({"message": "Menu added successfully!"}))
+    return Response(json.dumps({"message": "Menu added successfully!"}), status=200)
 
 
 # 메뉴 정보 변경
@@ -91,7 +91,7 @@ def update_menu(menu_id):
     print(menu_json)
     menu_item = Menu.query.filter_by(id=menu_id).first()
     if not menu_item:
-        return Response(json.dumps({"message": "Menu doesn't exist!"}))
+        return Response(json.dumps({"message": "Menu doesn't exist!"}), status=400)
     menu_item.name = menu_json.get("name")
     menu_item.name_en = menu_json.get("name_en")
     menu_item.kind = menu_json.get("kind")
@@ -101,7 +101,7 @@ def update_menu(menu_id):
     db.session.add(menu_item)
     db.session.commit()
     # return jsonify({"message": "Menu updated successfully!"}), 200
-    return Response(json.dumps({"message": "Menu updated successfully!"}))
+    return Response(json.dumps({"message": "Menu updated successfully!"}), status=200)
 
 
 # 메뉴 삭제
@@ -109,11 +109,11 @@ def update_menu(menu_id):
 def delete_menu(menu_id):
     menu_item = Menu.query.filter_by(id=menu_id).first()
     if not menu_item:
-        return Response(json.dumps({"message": "Menu doesn't exist!"}))
+        return Response(json.dumps({"message": "Menu doesn't exist!"}), status=400)
     db.session.delete(menu_item)
     db.session.commit()
     # return jsonify({"message": "Menu deleted successfully!"}), 200
-    return Response(json.dumps({"message": "Menu deleted successfully!"}))
+    return Response(json.dumps({"message": "Menu deleted successfully!"}), status=200)
 
 
 # 메뉴 이미지 전송
@@ -154,7 +154,7 @@ def add_user():
     # email이 이미 있는지 찾기
     user = Users.query.filter_by(email=user_json.get("email")).first()
     if user:
-        return Response(json.dumps({"message": "User aleady exist!"}))
+        return Response(json.dumps({"message": "User aleady exist!"}), status=400)
 
     user = Users(
         email=user_json.get("email"),
@@ -164,7 +164,7 @@ def add_user():
     )
     db.session.add(user)
     db.session.commit()
-    return Response(json.dumps({"message": "User added successfully!"}))
+    return Response(json.dumps({"message": "User added successfully!"}), status=200)
 
 
 # 로그인 api
@@ -174,9 +174,15 @@ def login():
     password = request.json.get("password")
     user = Users.query.filter_by(email=email).first()
     if not user or not check_password_hash(user.password, password):
-        Response(json.dumps({"message": "Login Failed!"}))
+        Response(json.dumps({"message": "Login Failed!"}), status=400)
     session["user"] = email
-    return Response(json.dumps({"message": "Login success!"}))
+    return Response(json.dumps({"message": "Login success!"}), status=200)
+
+
+@app.route("/api/logout", methods=["POST"])
+def logout():
+    session.pop("user", None)
+    return Response(json.dumps({"message": "Logout success!"}), status=200)
 
 
 if __name__ == "__main__":
