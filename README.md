@@ -43,17 +43,17 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 
 ### Image 관련
 
-- **GET** `/images/:id`
-  → 이미지를 가져옵니다.
+- **GET** `/images/menus/:id`
+  → 메뉴 이미지를 가져옵니다.
+- **GET** `/images/profile/:id`
+  → 프로필 이미지를 가져옵니다.
 
 ### User 관련
 
-- **GET** `/users`
-  → 모든 사용자를 조회합니다.
+- **GET** `/users/:id`
+  → 특정 사용자를 조회합니다.
 - **POST** `/users`
   → 새로운 사용자를 생성합니다.
-- **PUT** `/users/:id`
-  → 특정 유저의 정보를 수정합니다.
 - **DELETE** `/users/:id`
   → 특정 유저를 삭제합니다.
 
@@ -70,22 +70,22 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
   → 관리자 페이지의 홈 페이지입니다.
 - **GET, POST** `/admin/register`
   → 관리자 회원가입 페이지입니다.
-- **POST** `/admin/login`
+- **GET, POST** `/admin/login`
   → /api/login을 호출하고 홈 페이지로 리다이렉트 합니다.
 - **POST** `/admin/logout`
   → /api/logout을 호출하고 홈 페이지로 리다이렉트 합니다.
 - **GET, POST** `/admin/:id`
   → 관리자 유저의 프로필입니다.
 - **GET** `/admin/menus`
-  → GET /menus를 호출해서 메뉴들의 전체 정보를 볼 수 있고, csv로 내려받을 수 있습니다.
+  → GET /menus를 호출해서 전체 메뉴를 csv 파일로 다운받을 수 있습니다.
 - **POST** `/admin/menus`
   → POST /menus를 호출해서 새로운 메뉴를 등록할 수 있습니다.
 - **GET** `/admin/menus/:id`
   → GET /menus/:id를 호출해서 id를 통해 특정 메뉴를 조회할 수 있습니다.
-- **PUT** `/admin/menus/:id`
+- **POST** `/admin/menus/:id`
   → PUT /menus/:id를 호출해서 id를 통해 특정 메뉴를 업데이트 할 수 있습니다.
-- **DELETE** `/admin/menus/:id`
-  → DELETE /menus/:id를 호출해서 id를 통해 특정 메뉴를 삭제 할 수 있습니다.
+- **GET** `/admin/menus/:id/delete`
+  → POST /menus/:id를 호출해서 id를 통해 특정 메뉴를 삭제 할 수 있습니다.
 
 ## DB 스키마
 
@@ -95,9 +95,12 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 
 - [x] **Menu tab bar**: 메뉴화면 탭 바 구현
 - [x] **GET /images/:id**: 이미지 처리 로직 구현
-- [ ] **GET /menus/:id**: 특정 메뉴 불러오기 구현
-- [ ] **유저**: 회원가입, 로그인, 로그아웃 기능 구현
-- [ ] **관리자 페이지**: 관리자 페이지 기능들 구현
+- [x] **유저**: 회원가입, 로그인, 로그아웃 기능 구현
+- [x] **GET /menus/:id**: 특정 메뉴 불러오기 구현
+- [x] **관리자 페이지**: 관리자 페이지 기능들 구현
+- [x] **다운로드 기능**: 전체 메뉴를 csv파일로 export
+- [ ] **마이페이지**: 관리자 정보 페이지 구현
+- [ ] **업로드 기능**: 음식과 유저의 사진 업로드 기능 구현
 - [ ] **Electron UI, UX 구현**: 클라이언트 로직 구현
 - [ ] **이미지 처리**: 사이즈 조절, 누끼 따기
 - [ ] **서버사이드 예외처리**: 오류 처리 로직 구현
@@ -208,3 +211,8 @@ jsonify를 설정하기 위해서 JSON_AS_ASCII = False 설정을 넣었으나 �
 
 git bash 에서 python 버전이 달라서 윈도우 환경 변수의 패스를 자꾸 건드려 보았으나 효과가 없었다.
 ~/ 디렉토리의 .bashrc와 .bash_profile 을 편집하여 환경변수를 등록, 저장, 적용해서 해결하였다.
+
+### api를 이용한 로그인중 세션 문제 해결
+
+함수 안에서 api를 requests로 호출하는 식으로 로그인 api 로직을 짯는데, api 로직 안에서 세션을 저장하니까 클라이언트 사이드에 쿠키가 생기는게 아니라 서버에 쿠키가 생기는걸 알아차리지 못했다.
+api에서는 status_code로 로그인이 성공인지 실패인지만 알려주고, 세션에 저장하는것은 함수에서 처리하니까 해결이 되었다.
