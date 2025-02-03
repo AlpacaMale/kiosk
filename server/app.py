@@ -19,7 +19,7 @@ db.init_app(app)
 
 
 # 메뉴 목록 조회
-@app.route("/menu", methods=["GET"])
+@app.route("/menus", methods=["GET"])
 def get_menu():
     menus = Menu.query.all()
     menus = [menu.to_dict() for menu in menus]
@@ -28,7 +28,7 @@ def get_menu():
 
 
 # 새로운 메뉴 추가
-@app.route("/menu", methods=["POST"])
+@app.route("/menus", methods=["POST"])
 def add_menu():
     menu_json = request.json
     print(menu_json)
@@ -52,7 +52,7 @@ def add_menu():
     ).first()
 
     # 알아낸 ID를 통해서 img url 설정
-    img_path = f"{HOST_IP}/img/{menu_item.id}"
+    img_path = f"{HOST_IP}/images/{menu_item.id}"
     menu_item.img_path = img_path
     db.session.commit()
 
@@ -70,7 +70,7 @@ def add_menu():
 
 
 # 메뉴 정보 변경
-@app.route("/menu/<int:menu_id>", methods=["PUT"])
+@app.route("/menus/<int:menu_id>", methods=["PUT"])
 def update_menu(menu_id):
     menu_json = request.json
     print(menu_json)
@@ -88,7 +88,7 @@ def update_menu(menu_id):
 
 
 # 메뉴 삭제
-@app.route("/menu/<int:menu_id>", methods=["DELETE"])
+@app.route("/menus/<int:menu_id>", methods=["DELETE"])
 def delete_menu(menu_id):
     menu_item = Menu.query.filter_by(id=menu_id).first()
     db.session.delete(menu_item)
@@ -97,7 +97,7 @@ def delete_menu(menu_id):
     return Response(json.dumps({"message": "Menu deleted successfully!"}))
 
 
-@app.route("/img/<int:menu_id>/", methods=["GET"])
+@app.route("/images/<int:menu_id>/", methods=["GET"])
 def get_img(menu_id):
     # 쿼리 파라미터 확인
     # data = request.args
@@ -106,13 +106,13 @@ def get_img(menu_id):
     return send_file(img_path, mimetype="image/jpeg")
 
 
-@app.route("/order", methods=["GET"])
-def get_order():
+@app.route("/orders", methods=["GET"])
+def get_orders():
     # return jsonify()
     return Response(json.dumps({"message": "Your order"}))
 
 
-@app.route("/order", methods=["POST"])
+@app.route("/orders", methods=["POST"])
 def add_order():
     # return jsonify({"message": "Order added successfully!"}), 200
     return Response(json.dumps({"message": "Order added successfully!"}))
