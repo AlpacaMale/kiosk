@@ -109,6 +109,7 @@ class Users(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.Enum(Role), nullable=False)
     profile_image = db.Column(db.String(255), nullable=True)
 
@@ -116,6 +117,7 @@ class Users(db.Model):
         return {
             "id": self.id,
             "email": self.email,
+            "password": self.password,
             "role": self.role.value,
             "profile_image": self.profile_image,
         }

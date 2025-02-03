@@ -4,6 +4,7 @@ from flask import (
     send_file,
     request,
 )  # , jsonify 한글 인코딩 에러로 사용하지 않음
+from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 from models import Menu, Users, Status, Orders, OrderItems, db
 import requests
@@ -156,6 +157,7 @@ def add_user():
 
     user = Users(
         email=user_json.get("email"),
+        password=generate_password_hash(user_json.get("password")),
         role=user_json.get("role"),
         profile_image=user_json.get("profile_image"),
     )
