@@ -65,7 +65,7 @@ def add_menu():
     ).first()
 
     # 알아낸 ID를 통해서 img url 설정
-    img_path = f"{HOST_IP}/images/{menu_item.id}"
+    img_path = f"{HOST_IP}/images/menus/{menu_item.id}"
     menu_item.img_path = img_path
     db.session.commit()
 
@@ -75,7 +75,7 @@ def add_menu():
     # 이미지 다운로드 후에 로컬 images에 저장
     response = requests.get(menu_json.get("img_path"), stream=True)
     if response.status_code == 200:
-        with open(f"server/images/{menu_item.id}.jpg", "wb") as f:
+        with open(f"server/images/menus/{menu_item.id}.jpg", "wb") as f:
             for chunk in response.iter_content(1024):
                 f.write(chunk)
     # return jsonify({"message": "Menu added successfully!"}), 200
@@ -114,13 +114,21 @@ def delete_menu(menu_id):
     return Response(json.dumps({"message": "Menu deleted successfully!"}))
 
 
-@app.route("/images/<int:menu_id>/", methods=["GET"])
-def get_img(menu_id):
+# 메뉴 이미지 전송
+@app.route("/images/menus/<int:menu_id>/", methods=["GET"])
+def get_menu_img(menu_id):
     # 쿼리 파라미터 확인
     # data = request.args
     # print(json.dumps(data))
-    img_path = f"images/{menu_id}.jpg"
+    img_path = f"images/menus/{menu_id}.jpg"
     return send_file(img_path, mimetype="image/jpeg")
+
+
+# 프로필 이미지 전송
+@app.route("/images/profile/<int:user_id>", methods=["GET"])
+def post_profile_img(user_id):
+    profile_img = f"images/profile/{user_id}.jpg"
+    return send_file(profile_img, mimetype="image/jpeg")
 
 
 @app.route("/orders", methods=["GET"])
