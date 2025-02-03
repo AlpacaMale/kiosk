@@ -145,12 +145,19 @@ def add_order():
     return Response(json.dumps({"message": "Order added successfully!"}))
 
 
-# 특정 유저 정보 조회
-@app.route("/users", methods=["GET"])
-def get_user():
+# 특정 유저 조회
+@app.route("/users/<int:user_id>", methods=["GET"])
+def get_user(user_id):
+    # 현재 로그인 되어있는 유저가 관리자거나,
+    # 수정하려고 하는 유저와 일치한다면 조회하기
     user = Users.query.filter_by(email=session.get("email")).first()
     if not user:
-        return Response(json.dumps({"message": "User doesn't exist!"}), status=400)
+        return Response(json.dumps({"message": "You must logged in!"}), status=400)
+    if not (user_id == user.id or user.role == "admin"):
+        return Response(
+            json.dumps({"message": "You don't have authorize!"}), status=401
+        )
+
     user = user.to_dict()
     print(user)
     return Response(json.dumps(user, ensure_ascii=False), status=200)
@@ -159,6 +166,7 @@ def get_user():
 # 새로운 유저 추가
 @app.route("/users", methods=["POST"])
 def add_user():
+    session.pop("user", None)
     user_json = request.json
     print(user_json)
 
@@ -177,6 +185,8 @@ def add_user():
     db.session.commit()
     return Response(json.dumps({"message": "User added successfully!"}), status=200)
 
+
+@app.route("/users", methods=["POST"])
 
 # 로그인 api
 @app.route("/api/login", methods=["POST"])
