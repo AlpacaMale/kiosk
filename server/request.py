@@ -52,9 +52,10 @@ def get_img():
     print(response.text)
 
 
-def post_user(email, role, profile_image):
+def post_user(email, password, role, profile_image):
     data = {
         "email": email,
+        "password": password,
         "role": role,
         "profile_image": profile_image,
     }
@@ -63,7 +64,25 @@ def post_user(email, role, profile_image):
     print(response.text)
 
 
-post_user("admin@sessac.com", "admin", "")
+def login(email, password):
+    data = {
+        "email": email,
+        "password": password,
+    }
+
+    response = requests.post(f"{url}/api/login", headers=headers, data=json.dumps(data))
+    print(response.text)
+
+
+def logout():
+
+    response = requests.post(f"{url}/api/logout", headers=headers)
+    print(response.text)
+
+
+# post_user("admin@sessac.com", "1234", "admin", "")
+# login("admin@sessac.com", "1234")
+logout()
 
 
 # with open("server/coffee.csv", "r", encoding="utf-8") as file:
