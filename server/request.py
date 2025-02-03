@@ -52,8 +52,18 @@ def get_img():
     print(response.text)
 
 
-get_menu(1)
-# get_img()
+def post_user(email, role, profile_image):
+    data = {
+        "email": email,
+        "role": role,
+        "profile_image": profile_image,
+    }
+
+    response = requests.post(f"{url}/users", headers=headers, data=json.dumps(data))
+    print(response.text)
+
+
+post_user("admin@sessac.com", "admin", "")
 
 
 # with open("server/coffee.csv", "r", encoding="utf-8") as file:
