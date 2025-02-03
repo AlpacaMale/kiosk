@@ -52,18 +52,6 @@ def get_img():
     print(response.text)
 
 
-def post_user(email, password, role, profile_image):
-    data = {
-        "email": email,
-        "password": password,
-        "role": role,
-        "profile_image": profile_image,
-    }
-
-    response = requests.post(f"{url}/users", headers=headers, data=json.dumps(data))
-    print(response.text)
-
-
 def login(email, password):
     data = {
         "email": email,
@@ -82,15 +70,15 @@ def logout():
 
 # post_user("admin@sessac.com", "1234", "admin", "")
 # login("admin@sessac.com", "1234")
-logout()
+# logout()
 
 
-# with open("server/coffee.csv", "r", encoding="utf-8") as file:
-#     for line in file:
-#         name, name_en, kind, type, img_path = line.split(",")
-#         if name == "name":
-#             continue
-#         img_path = img_path.strip()
-#         base_price = random.choice([3000, 4000, 4500, 5500])
-#         # print(base_price)
-#         post_menu(name, name_en, kind, base_price, type, img_path)
+with open("server/coffee.csv", "r", encoding="utf-8") as file:
+    for line in file:
+        name, name_en, kind, type, img_path = line.split(",")
+        if name == "name":
+            continue
+        img_path = img_path.strip()
+        base_price = random.choice([3000, 4000, 4500, 5500])
+        # print(base_price)
+        post_menu(name, name_en, kind, base_price, type, img_path)
