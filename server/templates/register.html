@@ -1,0 +1,21 @@
+{% extends "layout.html" %} {% block title %}Register{% endblock %} {% block
+content %}
+<div class="form">
+  <form method="post">
+    <fieldset>
+      <legend>Register</legend>
+      <label for="email">email</label>
+      <input
+        id="email"
+        type="email"
+        name="email"
+        placeholder="example@mail.com"
+      />
+      <label for="password">password</label>
+      <input id="password" type="password" name="password" />
+      <label for="password-confirm">password confirm</label>
+      <input id="password-confirm" type="password" name="password-confirm" />
+    </fieldset>
+  </form>
+</div>
+{% endblock %}

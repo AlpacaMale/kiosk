@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/reset.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles/style.css') }}"
+    />
+    <title>{% block title %}{% endblock %} | Admin</title>
+  </head>
+  <body>
+    <header>
+      {% if user %}
+      <strong>{{ user }}님 안녕하십니까!</strong>
+      <a href="#">Logout</a>
+      <a href="#">Mypage</a>
+      {% endif %}
+    </header>
+    {% block content %} {% endblock %}
+    <footer>&copy; 2025 All rights reserved.</footer>
+  </body>
+</html>
