@@ -20,11 +20,19 @@ db.init_app(app)
 
 # 메뉴 목록 조회
 @app.route("/menus", methods=["GET"])
-def get_menu():
+def get_menus():
     menus = Menu.query.all()
     menus = [menu.to_dict() for menu in menus]
     print(menus)
     return Response(json.dumps(menus, ensure_ascii=False))
+
+
+# 특정 메뉴 목록 조회
+@app.route("/menus/<int:menu_id>", methods=["GET"])
+def get_menu(menu_id):
+    menu = Menu.query.filter_by(id=menu_id).first().to_dict()
+    print(menu)
+    return Response(json.dumps(menu, ensure_ascii=False))
 
 
 # 새로운 메뉴 추가
