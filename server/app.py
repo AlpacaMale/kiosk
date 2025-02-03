@@ -3,6 +3,7 @@ from flask import (
     Response,
     send_file,
     request,
+    session,
 )  # , jsonify 한글 인코딩 에러로 사용하지 않음
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
@@ -164,6 +165,18 @@ def add_user():
     db.session.add(user)
     db.session.commit()
     return Response(json.dumps({"message": "User added successfully!"}))
+
+
+# 로그인 api
+@app.route("/api/login", methods=["POST"])
+def login():
+    email = request.json.get("email")
+    password = request.json.get("password")
+    user = Users.query.filter_by(email=email).first()
+    if not user or not check_password_hash(user.password, password):
+        Response(json.dumps({"message": "Login Failed!"}))
+    session["user"] = email
+    return Response(json.dumps({"message": "Login success!"}))
 
 
 if __name__ == "__main__":
