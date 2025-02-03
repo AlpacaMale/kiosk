@@ -8,7 +8,7 @@ const decaffeineScreen = document.querySelector("#decaffeine");
 const beverageScreen = document.querySelector("#beverage");
 const tabButtons = document.querySelectorAll(".tab-btn");
 
-data = fetch("http://localhost:5000/menu")
+data = fetch("http://localhost:5000/menus")
   .then((response) => response.json())
   .then((data) => {
     data.forEach((element) => {
