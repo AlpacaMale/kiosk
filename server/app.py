@@ -128,7 +128,7 @@ def get_menu_img(menu_id):
 
 # 프로필 이미지 전송
 @app.route("/images/profile/<int:user_id>", methods=["GET"])
-def post_profile_img(user_id):
+def get_profile_img(user_id):
     profile_img = f"images/profile/{user_id}.jpg"
     return send_file(profile_img, mimetype="image/jpeg")
 
@@ -189,8 +189,8 @@ def add_user():
     return Response(json.dumps({"message": "User added successfully!"}), status=200)
 
 
-@app.route("/users", methods=["DELETE"])
-def update_user(user_id):
+@app.route("/users/<int:user_id>", methods=["DELETE"])
+def delete_user(user_id):
     # 현재 로그인 되어있는 유저가 관리자거나,
     # 삭제하려고 하는 유저와 일치한다면 조회하기
     logged_in_user = Users.query.filter_by(email=session.get("email")).first()
@@ -216,7 +216,7 @@ def login():
     password = request.json.get("password")
     user = Users.query.filter_by(email=email).first()
     if not user or not check_password_hash(user.password, password):
-        Response(json.dumps({"message": "Login Failed!"}), status=400)
+        return Response(json.dumps({"message": "Login Failed!"}), status=400)
     session["user"] = email
     return Response(json.dumps({"message": "Login success!"}), status=200)
 
