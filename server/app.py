@@ -145,6 +145,17 @@ def add_order():
     return Response(json.dumps({"message": "Order added successfully!"}))
 
 
+# 특정 유저 정보 조회
+@app.route("/users", methods=["GET"])
+def get_user():
+    user = Users.query.filter_by(email=session.get("email")).first()
+    if not user:
+        return Response(json.dumps({"message": "User doesn't exist!"}), status=400)
+    user = user.to_dict()
+    print(user)
+    return Response(json.dumps(user, ensure_ascii=False), status=200)
+
+
 # 새로운 유저 추가
 @app.route("/users", methods=["POST"])
 def add_user():
@@ -179,6 +190,7 @@ def login():
     return Response(json.dumps({"message": "Login success!"}), status=200)
 
 
+# 로그아웃 api
 @app.route("/api/logout", methods=["POST"])
 def logout():
     session.pop("user", None)
