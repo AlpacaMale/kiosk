@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 from enum import Enum
 
 db = SQLAlchemy()
@@ -43,6 +44,10 @@ class Menu(db.Model):
     base_price = db.Column(db.Integer, nullable=False)
     type = db.Column(db.Enum(Type), nullable=True)
     img_path = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     # 모델 클래스를 dict 형태로 변환하는 메소드
     def to_dict(self):
@@ -112,6 +117,10 @@ class Users(db.Model):
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.Enum(Role), nullable=False)
     profile_image = db.Column(db.String(255), nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     def to_dict(self):
         return {
