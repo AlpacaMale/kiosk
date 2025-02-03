@@ -21,28 +21,71 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 
 ### Menu 관련
 
-- **GET** `/menu`
+- **GET** `/menus`
   → 메뉴 리스트를 가져옵니다.
-- **POST** `/menu`
+- **GET** `/menus/:id`
+  → 특정 메뉴의 정보를 가져옵니다.
+- **POST** `/menus`
   → 새로운 메뉴를 추가합니다.
-- **PUT** `/menu/:id`
+- **PUT** `/menus/:id`
   → 특정 메뉴를 수정합니다.
-- **DELETE** `/menu/:id`
+- **DELETE** `/menus/:id`
   → 특정 메뉴를 삭제합니다.
 
 ### Order 관련
 
-- **GET** `/order`
+- **GET** `/orders`
   → 주문 내역을 가져옵니다.
-- **POST** `/order`
+- **POST** `/orders`
   → 새로운 주문을 생성합니다.
-- **PUT** `/order/:id`
+- **PUT** `/orders/:id`
   → 특정 주문을 수정합니다.
 
 ### Image 관련
 
-- **GET** `/img/:id`
+- **GET** `/images/:id`
   → 이미지를 가져옵니다.
+
+### User 관련
+
+- **GET** `/users`
+  → 모든 사용자를 조회합니다.
+- **POST** `/users`
+  → 새로운 사용자를 생성합니다.
+- **PUT** `/users/:id`
+  → 특정 유저의 정보를 수정합니다.
+- **DELETE** `/users/:id`
+  → 특정 유저를 삭제합니다.
+
+### Login 관련
+
+- **POST** `/api/login`
+  → 로그인한 사용자의 세션을 저장합니다.
+- **POST** `/api/logout`
+  → 로그아웃한 사용자의 세션을 제거합니다.
+
+### Admin 관련
+
+- **GET** `/admin`
+  → 관리자 페이지의 홈 페이지입니다.
+- **GET, POST** `/admin/register`
+  → 관리자 회원가입 페이지입니다.
+- **POST** `/admin/login`
+  → /api/login을 호출하고 홈 페이지로 리다이렉트 합니다.
+- **POST** `/admin/logout`
+  → /api/logout을 호출하고 홈 페이지로 리다이렉트 합니다.
+- **GET, POST** `/admin/:id`
+  → 관리자 유저의 프로필입니다.
+- **GET** `/admin/menus`
+  → GET /menus를 호출해서 메뉴들의 전체 정보를 볼 수 있고, csv로 내려받을 수 있습니다.
+- **POST** `/admin/menus`
+  → POST /menus를 호출해서 새로운 메뉴를 등록할 수 있습니다.
+- **GET** `/admin/menus/:id`
+  → GET /menus/:id를 호출해서 id를 통해 특정 메뉴를 조회할 수 있습니다.
+- **PUT** `/admin/menus/:id`
+  → PUT /menus/:id를 호출해서 id를 통해 특정 메뉴를 업데이트 할 수 있습니다.
+- **DELETE** `/admin/menus/:id`
+  → DELETE /menus/:id를 호출해서 id를 통해 특정 메뉴를 삭제 할 수 있습니다.
 
 ## DB 스키마
 
@@ -51,13 +94,16 @@ REST API로 작성하였으며, Menu와 Order 리소스에 관한 CRUD 기능을
 ## To-Do List
 
 - [x] **Menu tab bar**: 메뉴화면 탭 바 구현
-- [x] **GET /image/:id**: 이미지 처리 로직 구현
+- [x] **GET /images/:id**: 이미지 처리 로직 구현
+- [ ] **GET /menus/:id**: 특정 메뉴 불러오기 구현
+- [ ] **유저**: 회원가입, 로그인, 로그아웃 기능 구현
+- [ ] **관리자 페이지**: 관리자 페이지 기능들 구현
 - [ ] **Electron UI, UX 구현**: 클라이언트 로직 구현
 - [ ] **이미지 처리**: 사이즈 조절, 누끼 따기
 - [ ] **서버사이드 예외처리**: 오류 처리 로직 구현
-- [ ] **GET /order**: 주문 내역을 가져오는 API 구현
-- [ ] **POST /order**: 새로운 주문을 생성하는 API 구현
-- [ ] **PUT /order**: 주문 수정 API 구현
+- [ ] **GET /orders**: 주문 내역을 가져오는 API 구현
+- [ ] **POST /orders**: 새로운 주문을 생성하는 API 구현
+- [ ] **PUT /orders**: 주문 수정 API 구현
 - [ ] **html, css 주석**: 주석 추가
 - [ ] **css의 commit 클래스 리팩토링**: 코드 정리
 
