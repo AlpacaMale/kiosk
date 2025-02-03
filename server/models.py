@@ -27,6 +27,11 @@ class Ice(Enum):
     normal = "normal"
 
 
+class Role(Enum):
+    user = "user"
+    admin = "admin"
+
+
 # 모델 정의
 class Menu(db.Model):
     __tablename__ = "menu"
@@ -97,3 +102,20 @@ class OrderItems(db.Model):
         elif self.size == Size.LARGE:
             size_option *= 2
         return self.menu.base_price * size_option * self.quantity
+
+
+class Users(db.Model):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    role = db.Column(db.Enum(Role), nullable=False)
+    profile_image = db.Column(db.String(255), nullable=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "role": self.role.value,
+            "profile_image": self.profile_image,
+        }

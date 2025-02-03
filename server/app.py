@@ -5,7 +5,7 @@ from flask import (
     request,
 )  # , jsonify 한글 인코딩 에러로 사용하지 않음
 from config import Config
-from models import Menu, Status, Orders, OrderItems, db
+from models import Menu, Users, Status, Orders, OrderItems, db
 import requests
 import json
 import os
@@ -71,7 +71,7 @@ def add_menu():
 
     # 설정한 img url로 이미지 파일 다운로드
     # 이미지 폴더 생성
-    os.makedirs("server/images", exist_ok=True)
+    os.makedirs("server/images/menus", exist_ok=True)
     # 이미지 다운로드 후에 로컬 images에 저장
     response = requests.get(menu_json.get("img_path"), stream=True)
     if response.status_code == 200:
@@ -141,6 +141,27 @@ def get_orders():
 def add_order():
     # return jsonify({"message": "Order added successfully!"}), 200
     return Response(json.dumps({"message": "Order added successfully!"}))
+
+
+# 새로운 유저 추가
+@app.route("/users", methods=["POST"])
+def add_user():
+    user_json = request.json
+    print(user_json)
+
+    # email이 이미 있는지 찾기
+    user = Users.query.filter_by(email=user_json.get("email")).first()
+    if user:
+        return Response(json.dumps({"message": "User aleady exist!"}))
+
+    user = Users(
+        email=user_json.get("email"),
+        role=user_json.get("role"),
+        profile_image=user_json.get("profile_image"),
+    )
+    db.session.add(user)
+    db.session.commit()
+    return Response(json.dumps({"message": "User added successfully!"}))
 
 
 if __name__ == "__main__":
