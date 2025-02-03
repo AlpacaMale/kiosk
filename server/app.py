@@ -6,9 +6,11 @@ from flask import (
     session,
     render_template,
     redirect,
+    flash,
 )  # , jsonify 한글 인코딩 에러로 사용하지 않음
+from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
-from config import Config
+from config import Config, headers
 from models import Menu, Users, Status, Orders, OrderItems, db
 from function import login_required
 import requests
@@ -17,10 +19,12 @@ import os
 
 HOST_IP = "http://127.0.0.1:5000"
 
+
 # 어플리케이션 초기화
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
+Session(app)
 
 
 @app.route("/")
@@ -181,6 +185,12 @@ def add_user():
     user_json = request.json
     print(user_json)
 
+    # password와 pqssword-confirm이 일치하는지 찾기
+    if not user_json.get("password") == user_json.get("password-confirm"):
+        return Response(
+            json.dumps({"message": "Password confirm does not match!"}), status=400
+        )
+
     # email이 이미 있는지 찾기
     user = Users.query.filter_by(email=user_json.get("email")).first()
     if user:
@@ -225,8 +235,6 @@ def login():
     user = Users.query.filter_by(email=email).first()
     if not user or not check_password_hash(user.password, password):
         return Response(json.dumps({"message": "Login Failed!"}), status=400)
-    session["email"] = email
-    print(f"Logged in", session.get("email"))
     return Response(json.dumps({"message": "Login success!"}), status=200)
 
 
@@ -241,7 +249,18 @@ def logout():
 @app.route("/admin/register", methods=["GET", "POST"])
 def admin_register():
     if request.method == "POST":
-        pass
+        data = request.form.to_dict()
+        data["role"] = "admin"
+        data["profile_image"] = ""
+
+        response = requests.post(
+            f"{HOST_IP}/users", headers=headers, data=json.dumps(data)
+        )
+        if response.status_code == 400:
+            flash(response.json().get("message"))
+            return redirect("/admin/register")
+        else:
+            return redirect("/admin")
     else:
         return render_template("register.html")
 
@@ -250,7 +269,16 @@ def admin_register():
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
     if request.method == "POST":
-        pass
+        data = request.form.to_dict()
+        response = requests.post(
+            f"{HOST_IP}/api/login", headers=headers, data=json.dumps(data)
+        )
+        if response.status_code == 400:
+            flash(response.json().get("message"))
+            return redirect("/admin/login")
+        else:
+            session["email"] = data.get("email")
+            return redirect("/admin")
     else:
         return render_template("login.html")
 
@@ -264,4 +292,4 @@ def admin():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
