@@ -149,15 +149,18 @@ def add_order():
 @app.route("/users/<int:user_id>", methods=["GET"])
 def get_user(user_id):
     # 현재 로그인 되어있는 유저가 관리자거나,
-    # 수정하려고 하는 유저와 일치한다면 조회하기
-    user = Users.query.filter_by(email=session.get("email")).first()
-    if not user:
+    # 조회하려고 하는 유저와 일치한다면 조회하기
+    logged_in_user = Users.query.filter_by(email=session.get("email")).first()
+    if not logged_in_user:
         return Response(json.dumps({"message": "You must logged in!"}), status=400)
-    if not (user_id == user.id or user.role == "admin"):
+    if not (user_id == logged_in_user.id or logged_in_user.role == "admin"):
         return Response(
             json.dumps({"message": "You don't have authorize!"}), status=401
         )
 
+    user = Users.query.filter_by(id=user_id).first()
+    if not user:
+        return Response(json.dumps({"message": "User doesn't exist!"}), status=400)
     user = user.to_dict()
     print(user)
     return Response(json.dumps(user, ensure_ascii=False), status=200)
@@ -186,7 +189,25 @@ def add_user():
     return Response(json.dumps({"message": "User added successfully!"}), status=200)
 
 
-@app.route("/users", methods=["POST"])
+@app.route("/users", methods=["DELETE"])
+def update_user(user_id):
+    # 현재 로그인 되어있는 유저가 관리자거나,
+    # 삭제하려고 하는 유저와 일치한다면 조회하기
+    logged_in_user = Users.query.filter_by(email=session.get("email")).first()
+    if not logged_in_user:
+        return Response(json.dumps({"message": "You must logged in!"}), status=400)
+    if not (user_id == logged_in_user.id or logged_in_user.role == "admin"):
+        return Response(
+            json.dumps({"message": "You don't have authorize!"}), status=401
+        )
+
+    user = Users.query.filter_by(id=user_id).first()
+    if not user:
+        return Response(json.dumps({"message": "User doesn't exist!"}), status=400)
+    db.session.delete(user)
+    db.session.commit()
+    return Response(json.dumps({"message": "User deleted successfully!"}), status=200)
+
 
 # 로그인 api
 @app.route("/api/login", methods=["POST"])
