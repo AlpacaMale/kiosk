@@ -1,5 +1,10 @@
 {% extends "layout.html" %} {% block title %}Register{% endblock %} {% block
-content %}
+content %} {% with messages = get_flashed_messages() %} {% if messages %}
+<script type="text/javascript">
+  alert("{{ messages[0] }}"); <!-- 첫 번째 메시지를 alert()로 표시 -->
+</script>
+{% endif %} {% endwith %}
+
 <div class="form">
   <form method="post">
     <fieldset>
@@ -9,12 +14,19 @@ content %}
         id="email"
         type="email"
         name="email"
-        placeholder="example@mail.com"
+        placeholder="example@email.com"
+        required
       />
       <label for="password">password</label>
-      <input id="password" type="password" name="password" />
+      <input id="password" type="password" name="password" required />
       <label for="password-confirm">password confirm</label>
-      <input id="password-confirm" type="password" name="password-confirm" />
+      <input
+        id="password-confirm"
+        type="password"
+        name="password-confirm"
+        required
+      />
+      <input type="submit" value="register" />
     </fieldset>
   </form>
 </div>
