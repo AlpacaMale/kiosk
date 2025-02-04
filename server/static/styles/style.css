@@ -1,72 +1,20 @@
+@import "./screens/login.css";
 body {
+  display: flex;
   height: 100vh;
-}
-
-fieldset {
-  padding: 40px;
-  border: 2px solid black;
-  border-radius: 25px;
-  display: flex;
   flex-direction: column;
-  gap: 15px;
-}
-
-legend {
-  padding: 5px;
-  font-weight: bold;
-}
-
-.form {
-  width: 100%;
-  height: 40%;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  flex-direction: column;
+  align-items: center;
+  background-color: rgb(240, 244, 250);
   gap: 10px;
 }
 
-.grid {
-  width: 100%;
-  height: 50%;
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 20px;
+h1 {
+  font-size: 50px;
+  margin-bottom: 10px;
 }
 
-.section {
-  padding: 10px;
-}
-
-.section:nth-child(1),
-.section:nth-child(2) {
-  grid-row: span 2;
-}
-
-.section > * {
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-header {
+.button-group {
   display: flex;
-  padding: 20px;
-  justify-content: space-between;
-}
-
-.buttons {
-  display: flex;
-  gap: 15px;
-}
-
-.scroll {
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.add-menu {
-  height: 100%;
-  box-sizing: border-box;
+  padding-left: 50%;
 }
