@@ -1,20 +1,48 @@
+/* reset.css */
+@import "./reset.css";
+
+/* screens */
 @import "./screens/login.css";
-body {
-  display: flex;
-  height: 100vh;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: rgb(240, 244, 250);
-  gap: 10px;
-}
+@import "./screens/console.css";
 
 h1 {
   font-size: 50px;
   margin-bottom: 10px;
 }
 
+h2 {
+  font-size: 25px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+h3 {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 .button-group {
   display: flex;
-  padding-left: 50%;
+  margin-left: auto;
+  gap: 40px;
+}
+
+header {
+  position: sticky;
+  background-color: white;
+  border-bottom: 1px solid rgb(116, 120, 117);
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
 }

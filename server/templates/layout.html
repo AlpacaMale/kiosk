@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='styles/reset.css') }}"
-    />
-    <link
-      rel="stylesheet"
       href="{{ url_for('static', filename='styles/style.css') }}"
     />
     <title>{% block title %}{% endblock %} | Admin</title>
@@ -16,20 +12,17 @@
   <body>
     {% if email %}
     <header>
-      <strong>{{ email }} 님</strong>
-      <div class="buttons">
-        <form action="/admin">
-          <button type="submit">Home</button>
-        </form>
-        <form action="/admin/logout" method="POST">
-          <button type="submit">Logout</button>
-        </form>
+      <div>
+        <a href="/admin">HOME</a>
+        |
+        <a href="/admin/menus/add">ADD MENU</a>
+        |
+        <a href="/admin/logout">LOGOUT</a>
       </div>
+      <div>{{email}}</div>
     </header>
-    <a href="/admin/menus">&rarr; export menus.csv</a>
-    {% endif %} {% block content %} {% endblock %}
-    <footer>&copy; 2025 All rights reserved.</footer>
-    {% with messages = get_flashed_messages() %} {% if messages %}
+    {% endif %} {% block content %} {% endblock %} {% with messages =
+    get_flashed_messages() %} {% if messages %}
     <script type="text/javascript">
       alert("{{ messages[0] }}"); <!-- 첫 번째 메시지를 alert()로 표시 -->
     </script>

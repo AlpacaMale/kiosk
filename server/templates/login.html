@@ -1,34 +1,39 @@
 {% extends "layout.html" %} {% block title %}Login{% endblock %} {% block
 content %}
-<div class="login-wrap">
-  <div class="login-cell">
-    <h1>Admin 로그인</h1>
-    <p>email과 password를 입력하세요.</p>
-  </div>
-  <form class="login-cell" method="post">
-    <input
-      name="email"
-      class="login-input"
-      type="email"
-      placeholder="example@email.com"
-      required
-    />
-    <input
-      name="password"
-      class="login-input"
-      type="password"
-      placeholder="password"
-      required
-    />
-    <div class="button-group">
-      <button
-        class="login-submit login-submit--white"
-        onclick="location.href='/admin/register'"
-      >
-        계정 만들기
-      </button>
-      <button class="login-submit" type="submit">확인</button>
+<div class="login">
+  <div class="login-wrap">
+    <div class="login-cell">
+      <div>
+        <h1>Admin 로그인</h1>
+        <p>email과 password를 입력하세요.</p>
+      </div>
     </div>
-  </form>
+    <form class="login-cell" method="post">
+      <input
+        name="email"
+        class="login-input"
+        type="email"
+        placeholder="example@email.com"
+        required
+      />
+      <input
+        name="password"
+        class="login-input"
+        type="password"
+        placeholder="password"
+        required
+      />
+      <div class="button-group">
+        <button
+          class="login-submit login-submit--white"
+          onclick="location.href='/admin/register'"
+          type="button"
+        >
+          계정 만들기
+        </button>
+        <button class="login-submit" type="submit">확인</button>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}

@@ -1,3 +1,13 @@
+.login {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(240, 244, 250);
+  gap: 10px;
+}
+
 .login-wrap {
   background-color: white;
   width: 900px;
@@ -13,11 +23,12 @@
   padding-top: 70px;
   display: flex;
   flex-direction: column;
+  gap: 30px;
 }
 
 .login-input {
   height: 50px;
-  margin-bottom: 30px;
+  /* margin-bottom: 30px; */
   font-size: 20px;
   padding: 0px 10px;
   border-radius: 5px;
@@ -40,6 +51,10 @@
   background-color: white;
   color: rgb(10, 87, 209);
 }
+.login-submit--red {
+  background-color: red;
+  color: white;
+}
 
 .login-submit:hover {
   background-color: rgb(9, 72, 174);
@@ -53,4 +68,11 @@
 }
 .login-submit--white:active {
   background-color: rgb(230, 230, 230);
+}
+
+.login-submit--red:hover {
+  background-color: rgb(230, 0, 0);
+}
+.login-submit--red:active {
+  background-color: rgb(220, 0, 0);
 }
