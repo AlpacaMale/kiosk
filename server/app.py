@@ -40,7 +40,7 @@ def get_menus():
     if not menus:
         return Response(json.dumps({"message": "Menu doesn't exist!"}), status=400)
     menus = [menu.to_dict() for menu in menus]
-    print(menus)
+    # print(menus)
     return Response(json.dumps(menus, ensure_ascii=False), status=200)
 
 
@@ -51,7 +51,7 @@ def get_menu(menu_id):
     if not menu:
         return Response(json.dumps({"message": "Menu doesn't exist!"}), status=400)
     menu = menu.to_dict()
-    print(menu)
+    # print(menu)
     return Response(json.dumps(menu, ensure_ascii=False), status=200)
 
 
@@ -286,7 +286,7 @@ def admin_login():
 
 
 # 관리자 로그아웃 페이지
-@app.route("/admin/logout", methods=["POST"])
+@app.route("/admin/logout", methods=["GET"])
 def admin_logout():
     response = requests.post(f"{HOST_IP}/api/logout", headers=headers)
     if response.status_code == 200:
@@ -315,37 +315,40 @@ def admin_get_menu(menu_id):
     if response.status_code == 400:
         flash(response.text)
     datas = response.json()
-    return render_template(
-        "menu.html", data=data, email=session.get("email"), datas=datas
-    )
+    return render_template("menu.html", data=data, email=session.get("email"))
 
 
 # 관리자 페이지에서 전체 메뉴 다운로드
-@app.route("/admin/menus", methods=["GET"])
-@login_required
-def admin_export_menu():
-    response = requests.get(f"{HOST_IP}/menus", headers=headers)
-    if response.status_code == 400:
-        flash(response.text)
-    datas = response.json()
-    os.makedirs("server/data", exist_ok=True)
-    with open("server/data/menus.csv", "w", encoding="utf-8") as file:
-        fieldnames = ["id", "name", "name_en", "kind", "base_price", "type", "img_path"]
-        writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")
-        writer.writeheader()
-        writer.writerows(datas)
-    return send_file("data/menus.csv", mimetype="text/csv")
+# @app.route("/admin/menus", methods=["GET"])
+# @login_required
+# def admin_export_menu():
+#     response = requests.get(f"{HOST_IP}/menus", headers=headers)
+#     if response.status_code == 400:
+#         flash(response.text)
+#     datas = response.json()
+#     os.makedirs("server/data", exist_ok=True)
+#     with open("server/data/menus.csv", "w", encoding="utf-8") as file:
+#         fieldnames = ["id", "name", "name_en", "kind", "base_price", "type", "img_path"]
+#         writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")
+#         writer.writeheader()
+#         writer.writerows(datas)
+#     return send_file("data/menus.csv", mimetype="text/csv")
 
 
 # 관리자 페이지에서 메뉴 추가
-@app.route("/admin/menus", methods=["POST"])
+@app.route("/admin/menus/add", methods=["GET", "POST"])
 @login_required
 def admin_add_menu():
-    data = request.form.to_dict()
-    response = requests.post(f"{HOST_IP}/menus", headers=headers, data=json.dumps(data))
-    if response.status_code == 400:
-        flash(response.text)
-    return redirect("/admin")
+    if request.method == "POST":
+        data = request.form.to_dict()
+        response = requests.post(
+            f"{HOST_IP}/menus", headers=headers, data=json.dumps(data)
+        )
+        if response.status_code == 400:
+            flash(response.text)
+        return redirect("/admin")
+    else:
+        return render_template("/add_menu.html", email=session.get("email"))
 
 
 # 관리자 페이지에서 메뉴 수정
