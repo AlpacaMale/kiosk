@@ -1,92 +1,34 @@
-{% extends "layout.html" %} {% block title %}MENU{% endblock %} {% block content
-%}
+{% extends "layout.html" %} {% block title %}ADD MENU{% endblock %} {% block content %}
 <div class="console">
   <div></div>
-  <form class="console-main" method="post">
+  <div class="console-main">
     <h2>Update Menu</h2>
     <div class="console-box auto">
-      <h3>Name</h3>
-      <div class="console-input">
-        <div>
-          <label for="name">Name</label>
-          <input
-            class="login-input"
-            id="name"
-            type="text"
-            value="{{ data.name }}"
-            placeholder="Menu Name"
-            name="name"
-            required
-          />
+      <h3>Menu form</h3>
+      <form class="login-cell" method="post" enctype="multipart/form-data">
+        <input name="name" class="login-input" type="text" placeholder="name of menu" value="{{ data.name }}" required />
+        <input name="name_en" class="login-input" type="text" placeholder="english name of menu" value="{{ data.name_en }}" required />
+        <input name="file" type="file" accept="image/*" required />
+        <select id="type" name="type" class="login-input">
+          <option {% if data.type == "ice" %}selected{% endif %} value="ice">ice</option>
+          <option {% if data.type == "hot" %}selected{% endif %} value="hot">hot</option>
+        </select>
+        
+        <select id="kind" name="kind" class="login-input">
+          <option {% if data.kind == "coffee" %}selected{% endif %} value="coffee">coffee</option>
+          <option {% if data.kind == "tee" %}selected{% endif %} value="tee">tee</option>
+          <option {% if data.kind == "smoothie" %}selected{% endif %} value="smoothie">smoothie</option>
+          <option {% if data.kind == "decaffeine" %}selected{% endif %} value="decaffeine">decaffeine</option>
+          <option {% if data.kind == "beverage" %}selected{% endif %} value="beverage">beverage</option>
+        </select>
+        <input name="base_price" class="login-input" type="text" placeholder="price of menu" value="{{ data.base_price }}" required />
+        <div class="button-group">
+          <button class="login-submit login-submit--red" onclick="location.href='/admin/menus/{{ data.id }}/delete'" type="button">삭제</button>
+          <button class="login-submit" type="submit">확인</button>
         </div>
-        <div>
-          <label for="name_en">English Name</label>
-          <input
-            class="login-input"
-            id="name_en"
-            type="text"
-            value="{{ data.name_en }}"
-            placeholder="English Name"
-            name="name_en"
-            required
-          />
-        </div>
-      </div>
-      <h3>Type</h3>
-      <div class="console-split">
-        <div class="console-content">
-          <label for="ice">Ice</label>
-          <input class="login-input" id="Ice" type="radio" name="type"
-          value="ice" {% if data.type == "ice" %}checked{% endif %} required />
-        </div>
-        <div class="console-content">
-          <label for="hot">Hot</label>
-          <input class="login-input" id="hot" type="radio" name="type"
-          value="hot" {% if data.type == "hot" %}checked{% endif %} required />
-        </div>
-      </div>
-      <h3>Kind</h3>
-      <div class="console-input">
-        <div>
-          <label for="kind">Kind</label>
-          <input
-            class="login-input"
-            id="kind"
-            type="text"
-            value="{{ data.kind }}"
-            placeholder="Kind"
-            name="kind"
-            required
-          />
-        </div>
-      </div>
-      <h3>Price</h3>
-      <div class="console-input">
-        <div>
-          <label for="price">Price</label>
-          <input
-            class="login-input"
-            id="price"
-            type="text"
-            value="{{ data.base_price }}"
-            placeholder="Price"
-            name="base_price"
-            required
-          />
-        </div>
-      </div>
-      <div class="button-group">
-        <button
-          class="login-submit login-submit--red"
-          onclick="location.href='/admin/menus/{{ data.id }}/delete'"
-          type="button"
-        >
-          삭제하기
-        </button>
-        <button class="login-submit" type="submit">확인</button>
-      </div>
+      </form>
     </div>
-  </form>
+  </div>
   <div></div>
 </div>
 {% endblock %}

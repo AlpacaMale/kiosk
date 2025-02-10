@@ -50,16 +50,17 @@ label {
   font-weight: bold;
   margin-bottom: 5px;
 }
-table {
+.menu-table {
   text-align: center;
 }
-th {
+
+.menu-table th {
   font-weight: bold;
   padding: 10px;
 }
-tr {
+.menu-table tr {
   border-bottom: 1px solid rgb(211, 222, 214);
 }
-td {
+.menu-table td {
   vertical-align: middle;
 }

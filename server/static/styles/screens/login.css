@@ -13,13 +13,13 @@
   height: 350px;
   border-radius: 20px;
   padding: 35px;
+  padding-top: 100px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 30px;
 }
 
 .login-cell {
-  padding-top: 70px;
   display: flex;
   flex-direction: column;
   gap: 30px;
