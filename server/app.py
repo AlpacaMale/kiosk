@@ -72,7 +72,9 @@ def get_menu(menu_id):
 def add_menu():
 
     # post로 받은 데이터를 menu로 등록합니다.
-    menu_json = request.json
+    menu_json = request.get_json(silent=True)
+    if not menu_json:
+        menu_json = request.form.to_dict()
     menu_item = Menu(
         name=menu_json.get("name"),
         name_en=menu_json.get("name_en"),
@@ -98,9 +100,20 @@ def add_menu():
                 for chunk in response.iter_content(1024):
                     f.write(chunk)
 
-        img_path = f"{HOST_IP}/images/menus/{menu_item.id}"
-        menu_item.img_path = img_path
-        db.session.commit()
+    # 만약 데이터에 파일이 있다면 파일 이름을 변경 후 저장합니다.
+    elif "file" in request.files:
+        file = request.files["file"]
+        if file.filename != "" and allowed_file(file.filename):
+            file.save(f"server/images/menus/{menu_item.id}.jpg")
+
+    else:
+        return Response(
+            json.dumps({"message": "Need menu image or image url!"}), status=400
+        )
+
+    img_path = f"{HOST_IP}/images/menus/{menu_item.id}"
+    menu_item.img_path = img_path
+    db.session.commit()
 
     return Response(json.dumps({"message": "Menu added successfully!"}), status=200)
 
@@ -110,7 +123,9 @@ def add_menu():
 def update_menu(menu_id):
 
     # put으로 받은 데이터를 menu로 등록합니다.
-    menu_json = request.json
+    menu_json = request.get_json(silent=True)
+    if not menu_json:
+        menu_json = request.form.to_dict()
     menu_item = Menu.query.filter_by(id=menu_id).first()
 
     # 만약 그런 메뉴가 없다면 에러 메시지를 보냅니다.
@@ -123,8 +138,12 @@ def update_menu(menu_id):
     menu_item.kind = menu_json.get("kind")
     menu_item.base_price = menu_json.get("base_price")
     menu_item.type = menu_json.get("type")
-    if menu_json.get("img_path"):
-        menu_item.img_path = menu_json.get("img_path")
+
+    # 만약 데이터에 파일이 있다면 파일 이름을 변경 후 저장합니다.
+    if "file" in request.files:
+        file = request.files["file"]
+        if file.filename != "" and allowed_file(file.filename):
+            file.save(f"server/images/menus/{menu_item.id}.jpg")
 
     # db에 저장해줍니다.
     db.session.add(menu_item)
@@ -414,10 +433,15 @@ def admin_add_menu():
 
         # form에서 데이터를 받아옵니다.
         data = request.form.to_dict()
+        file = request.files.get("file")
 
         # 메뉴 추가 api에 요청을 보냅니다.
         response = requests.post(
-            f"{HOST_IP}/menus", headers=app.config["HEADERS"], data=json.dumps(data)
+            f"{HOST_IP}/menus",
+            headers={"Authorization": "Bearer token"},
+            data=data,
+            # files={"file": file.stream},
+            files={"file": (file.filename, file.stream, file.content_type)},
         )
 
         # 만약 실패했다면 에러메시지를 출력합니다.
@@ -428,7 +452,7 @@ def admin_add_menu():
 
     # get 요청을 받았을 경우
     else:
-        return render_template("/add_menu.html", email=session.get("email"))
+        return render_template("add_menu.html", email=session.get("email"))
 
 
 # 관리자 페이지에서 메뉴 수정
@@ -438,12 +462,15 @@ def admin_update_menu(menu_id):
 
     # form에서 data를 받아옵니다.
     data = request.form.to_dict()
+    file = request.files.get("file")
 
     # 메뉴 수정 api에 요청을 보냅니다.
     response = requests.put(
         f"{HOST_IP}/menus/{menu_id}",
-        headers=app.config["HEADERS"],
-        data=json.dumps(data),
+        headers={"Authorization": "Bearer token"},
+        data=data,
+        # files={"file": file.stream},
+        files={"file": (file.filename, file.stream, file.content_type)},
     )
 
     # 만약 실패하면 에러 메시지를 출력합니다.
@@ -467,6 +494,13 @@ def admin_delete_menu(menu_id):
     if response.status_code == 400:
         flash(response.text)
     return redirect(url_for("home"))
+
+
+def allowed_file(filename):
+    return (
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower() in app.config["ALLOWED_EXTENSIONS"]
+    )
 
 
 if __name__ == "__main__":

@@ -13,3 +13,4 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI")
     HEADERS = {"Content-Type": "application/json; charset=utf-8"}
     JSON_AS_ASCII = False
+    ALLOWED_EXTENSIONS = {"jpg"}

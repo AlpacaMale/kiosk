@@ -2,5 +2,5 @@ client/node_modules
 server/__pycache__
 server/coffee.csv
 server/images
-server/data
+server/datas
 .env
