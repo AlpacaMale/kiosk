@@ -55,3 +55,7 @@
   width: 35px;
   height: 35px;
 }
+.menu-titles {
+  display: flex;
+  justify-content: space-around;
+}

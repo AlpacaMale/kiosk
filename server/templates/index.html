@@ -4,7 +4,10 @@
   <div class="console-main">
     <h2>Admin HOME</h2>
     <div class="console-box">
-      <h3>Menus {% if datas %}{{datas|length}}{% else %}0{% endif %}개</h3>
+      <div class="menu-titles">
+        <h3>Menus {% if datas %}{{datas|length}}{% else %}0{% endif %}개</h3>
+        <button class="login-submit login-submit--white" onclick="location.href='/admin/menus'" type="button">CSV 파일로 내려받기</button>
+      </div>
       {% if datas %}
       <table>
         <thead>
