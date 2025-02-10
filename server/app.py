@@ -379,20 +379,29 @@ def admin_get_menu(menu_id):
 
 
 # 관리자 페이지에서 전체 메뉴 다운로드
-# @app.route("/admin/menus", methods=["GET"])
-# @login_required
-# def admin_export_menu():
-#     response = requests.get(f"{HOST_IP}/menus", headers=headers)
-#     if response.status_code == 400:
-#         flash(response.text)
-#     datas = response.json()
-#     os.makedirs("server/data", exist_ok=True)
-#     with open("server/data/menus.csv", "w", encoding="utf-8") as file:
-#         fieldnames = ["id", "name", "name_en", "kind", "base_price", "type", "img_path"]
-#         writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")
-#         writer.writeheader()
-#         writer.writerows(datas)
-#     return send_file("data/menus.csv", mimetype="text/csv")
+@app.route("/admin/menus", methods=["GET"])
+@login_required
+def admin_export_menu():
+
+    # 메뉴 조회 api로 요청을 보냅니다.
+    response = requests.get(f"{HOST_IP}/menus", headers=app.config["HEADERS"])
+
+    # 만약 실패한다면 에러 메시지를 출력합니다.
+    if response.status_code == 400:
+        flash(response.text)
+
+    # json으로 datas를 받아옵니다.
+    datas = response.json()
+
+    # datas를 바탕으로 csv 파일을 만듭니다.
+    with open("server/datas/menus.csv", "w", encoding="utf-8") as file:
+        fieldnames = ["id", "name", "name_en", "kind", "base_price", "type", "img_path"]
+        writer = csv.DictWriter(file, fieldnames=fieldnames, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(datas)
+
+    # 만든 csv 파일을 보내줍니다.
+    return send_file("datas/menus.csv", mimetype="text/csv")
 
 
 # 관리자 페이지에서 메뉴 추가
