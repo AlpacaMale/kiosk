@@ -1,6 +1,6 @@
 client/node_modules
 server/__pycache__
-server/config.py
 server/coffee.csv
 server/images
 server/data
+.env

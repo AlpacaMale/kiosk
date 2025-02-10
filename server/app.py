@@ -10,7 +10,7 @@ from flask import (
 )  # , jsonify 한글 인코딩 에러로 사용하지 않음
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
-from config import Config, headers
+from config import Config
 from models import Menu, Users, Status, Orders, OrderItems, db
 from function import login_required
 import requests
@@ -256,7 +256,7 @@ def admin_register():
         data["profile_image"] = ""
 
         response = requests.post(
-            f"{HOST_IP}/users", headers=headers, data=json.dumps(data)
+            f"{HOST_IP}/users", headers=app.config["HEADERS"], data=json.dumps(data)
         )
         if response.status_code == 400:
             flash(response.json().get("message"))
@@ -273,7 +273,7 @@ def admin_login():
     if request.method == "POST":
         data = request.form.to_dict()
         response = requests.post(
-            f"{HOST_IP}/api/login", headers=headers, data=json.dumps(data)
+            f"{HOST_IP}/api/login", headers=app.config["HEADERS"], data=json.dumps(data)
         )
         if response.status_code == 400:
             flash(response.json().get("message"))
@@ -288,7 +288,7 @@ def admin_login():
 # 관리자 로그아웃 페이지
 @app.route("/admin/logout", methods=["GET"])
 def admin_logout():
-    response = requests.post(f"{HOST_IP}/api/logout", headers=headers)
+    response = requests.post(f"{HOST_IP}/api/logout", headers=app.config["HEADERS"])
     if response.status_code == 200:
         session.pop("email", None)
     return redirect("/admin")
@@ -298,7 +298,7 @@ def admin_logout():
 @app.route("/admin", methods=["GET"])
 @login_required
 def admin():
-    response = requests.get(f"{HOST_IP}/menus", headers=headers)
+    response = requests.get(f"{HOST_IP}/menus", headers=app.config["HEADERS"])
     datas = response.json()
     return render_template("index.html", email=session.get("email"), datas=datas)
 
@@ -307,11 +307,11 @@ def admin():
 @app.route("/admin/menus/<int:menu_id>", methods=["GET"])
 @login_required
 def admin_get_menu(menu_id):
-    response = requests.get(f"{HOST_IP}/menus/{menu_id}", headers=headers)
+    response = requests.get(f"{HOST_IP}/menus/{menu_id}", headers=app.config["HEADERS"])
     if response.status_code == 400:
         flash(response.text)
     data = response.json()
-    response = requests.get(f"{HOST_IP}/menus", headers=headers)
+    response = requests.get(f"{HOST_IP}/menus", headers=app.config["HEADERS"])
     if response.status_code == 400:
         flash(response.text)
     datas = response.json()
@@ -342,7 +342,7 @@ def admin_add_menu():
     if request.method == "POST":
         data = request.form.to_dict()
         response = requests.post(
-            f"{HOST_IP}/menus", headers=headers, data=json.dumps(data)
+            f"{HOST_IP}/menus", headers=app.config["HEADERS"], data=json.dumps(data)
         )
         if response.status_code == 400:
             flash(response.text)
@@ -357,7 +357,9 @@ def admin_add_menu():
 def admin_update_menu(menu_id):
     data = request.form.to_dict()
     response = requests.put(
-        f"{HOST_IP}/menus/{menu_id}", headers=headers, data=json.dumps(data)
+        f"{HOST_IP}/menus/{menu_id}",
+        headers=app.config["HEADERS"],
+        data=json.dumps(data),
     )
     if response.status_code == 400:
         flash(response.text)
@@ -368,7 +370,9 @@ def admin_update_menu(menu_id):
 @app.route("/admin/menus/<int:menu_id>/delete", methods=["GET"])
 @login_required
 def admin_delete_menu(menu_id):
-    response = requests.delete(f"{HOST_IP}/menus/{menu_id}", headers=headers)
+    response = requests.delete(
+        f"{HOST_IP}/menus/{menu_id}", headers=app.config["HEADERS"]
+    )
     if response.status_code == 400:
         flash(response.text)
     return redirect("/admin")

@@ -1,10 +1,9 @@
 from playwright.sync_api import sync_playwright
 import time
+import os
 from bs4 import BeautifulSoup
-from config import url
 
-
-# 찾아낼것 =
+url = os.environ.get("URL")
 
 p = sync_playwright().start()
 browser = p.chromium.launch(headless=False)
