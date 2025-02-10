@@ -1,37 +1,34 @@
-{% extends "layout.html" %} {% block title %}HOME{% endblock %} {% block content
-%}
+{% extends "layout.html" %} {% block title %}HOME{% endblock %} {% block content %}
 <div class="console">
   <div></div>
   <div class="console-main">
     <h2>Admin HOME</h2>
     <div class="console-box">
       <h3>Menus {% if datas %}{{datas|length}}{% else %}0{% endif %}개</h3>
-      <div class="console-split">
-        {% if datas %}
-        <div class="console-content">
-          {% for data in datas %} {% if loop.index0 is even %}
-          <button
-            class="menu-item"
-            onclick="location.href='/admin/menus/{{ data.id }}'"
-          >
-            <img class="menu-img" src="{{ data.img_path }}" alt="" />{{
-            data.name }}
-          </button>
-          {% endif %} {% endfor %}
-        </div>
-        <div class="console-content">
-          {% for data in datas %} {% if loop.index0 is odd %}
-          <button
-            class="menu-item"
-            onclick="location.href='/admin/menus/{{ data.id }}'"
-          >
-            <img class="menu-img" src="{{ data.img_path }}" alt="" />{{
-            data.name }}
-          </button>
-          {% endif %} {% endfor %}
-        </div>
-        {% endif %}
-      </div>
+      {% if datas %}
+      <table>
+        <thead>
+          <tr>
+            <th>사진</th>
+            <th>이름</th>
+            <th>종류</th>
+            <th>가격</th>
+            <th>핫/아이스</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for data in datas %}
+          <tr>
+            <td><img class="menu-img" src="{{ data.img_path }}" alt="" /></td>
+            <td><button class="menu-button" type="button" onclick="location.href='/admin/menus/{{ data.id }}'">{{ data.name }}</button></td>
+            <td>{{ data.kind }}</td>
+            <td>{{ data.base_price }}</td>
+            <td>{{ data.type }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
     </div>
   </div>
 </div>
