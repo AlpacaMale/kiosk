@@ -85,13 +85,6 @@ def add_menu():
     db.session.add(menu_item)
     db.session.commit()
 
-    # 방금 등록한 메뉴의 id를 찾습니다.
-    menu_item = Menu.query.filter_by(
-        name=menu_json.get("name"),
-        kind=menu_json.get("kind"),
-        type=menu_json.get("type"),
-    ).first()
-
     # 만약 데이터에 이미지 경로가 있다면 다운로드 받은 후 경로를 업데이트 해줍니다.
     if menu_json.get("img_path"):
         response = requests.get(menu_json.get("img_path"), stream=True)
